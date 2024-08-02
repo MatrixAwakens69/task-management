@@ -42,11 +42,15 @@ router.post("/login", async (req, res) => {
       return res.status(401).send("Invalid password");
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    res.status(200).json({ message: "Login successful", token });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+    const { password: pass, ...rest } = user.dataValues;
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      })
+      .status(200)
+      .json(rest);
   } catch (error) {
     console.error(error);
     res.status(500).send("Something went wrong");

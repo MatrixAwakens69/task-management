@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/authRouter.js"));
+app.use("/api/task", require("./routes/taskRouter.js"));
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
