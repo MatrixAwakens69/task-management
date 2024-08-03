@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const bodyParser = require("body-parser");
 const { sequelize } = require("./models");
 
