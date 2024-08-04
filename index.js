@@ -3,14 +3,19 @@ const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
 const port = process.env.PORT || 4000;
-const bodyParser = require("body-parser");
 const { sequelize } = require("./models");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
-app.use(bodyParser.json());
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", require("./routes/authRouter.js"));
 app.use("/api/task", require("./routes/taskRouter.js"));

@@ -3,16 +3,13 @@ import { useNavigate } from "react-router-dom";
 import {
   TextInput,
   PasswordInput,
-  Checkbox,
   Anchor,
   Paper,
   Title,
   Text,
   Container,
-  Group,
   Button,
 } from "@mantine/core";
-import axiosInstance from "../axiosInstance";
 import classes from "../styles/LogIn.module.css";
 
 const LogIn = () => {
@@ -25,11 +22,25 @@ const LogIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/login", {
-        username,
-        password,
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
       });
-      console.log(response.data);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error response:", errorData);
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
       navigate("/dashboard");
     } catch (err) {
       setError("Failed to log in. Please try again.");
@@ -71,9 +82,6 @@ const LogIn = () => {
               {error}
             </Text>
           )}
-          <Group mt="md">
-            <Checkbox label="Remember me" />
-          </Group>
           <Button type="submit" fullWidth mt="xl">
             Log In
           </Button>
